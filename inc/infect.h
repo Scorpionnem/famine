@@ -1,37 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   infect.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/03/04 11:32:10 by mbatty           ###   ########.fr       */
+/*   Created: 2026/03/04 11:29:36 by mbatty            #+#    #+#             */
+/*   Updated: 2026/03/04 11:31:26 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "infect.h"
+#pragma once
 
-#include <fcntl.h>
-#include <unistd.h>
+#define SIGNATURE_STR "Famine version 1.0 (c)oded by mbatty-mbatty"
 
-int	mute_outputs()
-{
-	int	fd = open("/dev/null", O_RDONLY);
-	if (fd == -1)
-		return (-1);
-	
-	dup2(fd, STDOUT_FILENO);
-	dup2(fd, STDERR_FILENO);
+int	infect_file(const char *path);
+int	infect_dir(const char *path);
 
-	close(fd);
-	return (0);
-}
-
-int	main(void)
-{
-	mute_outputs();
-	infect_dir("/tmp/test");
-	infect_dir("/tmp/test2");
-	return (0);
-}
+int	check_signature(const char *path);
+int	check_elf_hdr(const char *path);

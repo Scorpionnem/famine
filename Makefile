@@ -10,6 +10,8 @@ INCLUDE_DIRS :=	inc/\
 
 SRCS :=	main\
 		strjoin\
+		infect\
+		check\
 
 ###
 

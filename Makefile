@@ -9,6 +9,7 @@ LFLAGS :=
 INCLUDE_DIRS :=	inc/\
 
 SRCS :=	main\
+		strjoin\
 
 ###
 

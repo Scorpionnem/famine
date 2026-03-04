@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:15 by mbatty            #+#    #+#             */
-/*   Updated: 2026/03/04 11:48:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/03/04 12:40:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	infect_file(const char *path)
 	int	fd = open(path, O_WRONLY | O_APPEND);
 	if (fd == -1)
 		return (-1);
+
+	// Inject virus code in file.
 
 	write(fd, SIGNATURE_STR, sizeof(SIGNATURE_STR));
 

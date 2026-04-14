@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:30:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/13 17:57:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/14 18:19:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,44 +65,13 @@ int	check_elf_hdr(void *map, size_t size)
 	return (0);
 }
 
-int	check_signature(const char *path)
+t_footer	get_footer(const char *path);
+
+int	check_signature(t_ctx *ctx, const char *path)
 {
-	int	fd = open(path, O_RDONLY);
-	if (fd == -1)
+	t_footer	footer = get_footer(path);
+	ctx->payload_size = footer.payload_size;
+	if (footer.magic == FOOTER_MAGIC)
 		return (-1);
-
-	struct stat	stats;
-	fstat(fd, &stats);
-
-	if (stats.st_size == 0)
-	{
-		close(fd);
-		return (-1);
-	}
-
-	char	*file = mmap(NULL, stats.st_size, PROT_READ, MAP_SHARED, fd, 0);
-	if (file == MAP_FAILED)
-	{
-		close(fd);
-		return (-1);
-	}
-
-	char	*find = strstr(file, SIGNATURE_STR);
-	if (find)
-	{
-		close(fd);
-		munmap(file, stats.st_size);
-		return (-1);
-	}
-
-	if (check_elf_hdr(file, stats.st_size) == -1)
-	{
-		munmap(file, stats.st_size);
-		close(fd);
-		return (-1);
-	}
-
-	munmap(file, stats.st_size);
-	close(fd);
 	return (0);
 }

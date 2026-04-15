@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 17:53:33 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/14 18:04:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/15 16:07:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,14 @@ char	*strjoin(char const *s1, char const *s2)
 	return ((char *)dest);
 }
 
+/*
+	Crawls the directory given by path
+	If it finds a directory, it calls crawl_dir() recursively to explore it
+	If it finds a file, it will try to infect it by calling infect_file()
+
+	@param path path to targeted directory
+	@param ctx context used mainly for argv/envp
+*/
 int	crawl_dir(const char *path, t_ctx *ctx)
 {
 	struct dirent	*dirent = NULL;

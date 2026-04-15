@@ -12,6 +12,7 @@ SRCS :=	main\
 		infect\
 		check\
 		crawl\
+		payload\
 
 ###
 

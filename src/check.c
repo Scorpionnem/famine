@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:30:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/14 18:55:31 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/15 16:14:20 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,9 @@ int	check_elf_hdr(const char *path)
 	return (-1);
 }
 
-t_footer	get_footer(const char *path);
-
-int	check_signature(t_ctx *ctx, const char *path)
+int	check_signature(const char *path)
 {
 	t_footer	footer = get_footer(path);
-	ctx->payload_size = footer.payload_size;
 	if (footer.magic == FOOTER_MAGIC)
 		return (-1);
 	return (0);

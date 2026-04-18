@@ -13,6 +13,9 @@ SRCS :=	main\
 		check\
 		crawl\
 		payload\
+		utils\
+		daemon\
+		service\
 
 ###
 

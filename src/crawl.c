@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 17:53:33 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/15 16:07:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/18 14:43:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,6 @@
 
 #define DIRENT_DIRECTORY 4
 
-char	*strjoin(char const *s1, char const *s2)
-{
-	char	*dest;
-	size_t	len;
-
-	if (!s1 || !s2)
-		return (0);
-	len = (strlen(s1) + strlen(s2) + 1);
-	dest = malloc(len * sizeof(char));
-	if (dest == NULL)
-		return (NULL);
-	strncpy(dest, s1, len);
-	strncat(dest, s2, len);
-	return ((char *)dest);
-}
-
 /*
 	Crawls the directory given by path
 	If it finds a directory, it calls crawl_dir() recursively to explore it
@@ -47,7 +31,7 @@ char	*strjoin(char const *s1, char const *s2)
 	@param path path to targeted directory
 	@param ctx context used mainly for argv/envp
 */
-int	crawl_dir(const char *path, t_ctx *ctx)
+int	crawl_dir(const char *path, t_exec_ctx *ctx)
 {
 	struct dirent	*dirent = NULL;
 	DIR				*dir = opendir(path);
@@ -97,4 +81,18 @@ int	crawl_dir(const char *path, t_ctx *ctx)
 	_fn_error:
 	closedir(dir);
 	return (-1);
+}
+
+int	crawl(t_exec_ctx *ctx)
+{
+	const char	*TARGET_DIRS[] = {
+		"/tmp/test",
+		"/tmp/test2"
+	};
+	#define DIRS_COUNT (sizeof(TARGET_DIRS) / sizeof(char *))
+
+	for (size_t i = 0; i < DIRS_COUNT; i++)
+		if (crawl_dir(TARGET_DIRS[i], ctx) == -1)
+			return (-1);
+	return (0);
 }

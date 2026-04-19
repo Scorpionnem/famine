@@ -6,20 +6,20 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 15:59:25 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 14:37:31 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:03:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <syscall.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 
-uint64_t	min(uint64_t a, uint64_t b)
+static uint64_t	min(uint64_t a, uint64_t b)
 {
 	return (a < b ? a : b);
 }

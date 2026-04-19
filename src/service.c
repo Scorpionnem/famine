@@ -6,54 +6,23 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 15:26:15 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:03:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
+#include "service.h"
 
-#include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <stdint.h>
-#include <sys/syscall.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <sys/mman.h>
-#include <stdbool.h>
-#include <string.h>
 #include <sys/file.h>
-
-# define SUPER_USER_LOCK_FILE "/var/lock/famine.lock"
-# define WEAK_LOCK_FILE "/tmp/famine.lock"
-
-# define SERVICE_FILE "/etc/systemd/system/famine.service"
-# define SERVICE_START "sudo systemctl start famine.service &"
-# define SERVICE_ENABLE "systemctl enable famine.service &"
-# define SERVICE_FILE_CONTENT "\
-[Unit]\n\
-Description=Fitness app to track eating habits (for real, trust me...)\n\
-After=network.target\n\
-StartLimitIntervalSec=0\n\
-[Service]\n\
-Type=forking\n\
-PIDFile=/var/lock/famine.lock\n\
-Restart=always\n\
-RestartSec=1\n\
-User=root\n\
-ExecStart=/bin/famine\n\
-\n\
-[Install]\n\
-WantedBy=multi-user.target"
 
 /*
 	Setup program as a systemd service, it will restart when host reboots and when it is killed
 
 	see SERVICE_FILE_CONTENT and SERVICE_FILE defines
 */
-int	setup_service_file()
+static int	setup_service_file()
 {
 	int	fd;
 

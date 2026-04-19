@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:30:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/15 16:14:20 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:01:38 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <string.h>
-#include <dirent.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/stat.h>

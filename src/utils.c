@@ -6,15 +6,12 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 14:43:37 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 14:43:56 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:00:12 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 

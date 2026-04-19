@@ -6,29 +6,17 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 15:19:11 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:02:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
+#include "service.h"
 
-#include <fcntl.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <stdint.h>
-#include <sys/syscall.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <sys/mman.h>
-#include <stdbool.h>
-#include <string.h>
-#include <sys/file.h>
 
-int	main(int ac, char **av, char **envp)
+int	main(__attribute__((unused)) int ac, char **av, char **envp)
 {
-	(void)ac;
 	t_exec_ctx	exec_ctx = {0};
 
 	exec_ctx.av = av;

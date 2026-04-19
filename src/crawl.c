@@ -6,22 +6,15 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 17:53:33 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/18 14:43:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/04/19 11:06:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "famine.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
 #include <dirent.h>
-
-#define DIRENT_DIRECTORY 4
 
 /*
 	Crawls the directory given by path
@@ -31,7 +24,7 @@
 	@param path path to targeted directory
 	@param ctx context used mainly for argv/envp
 */
-int	crawl_dir(const char *path, t_exec_ctx *ctx)
+static int	crawl_dir(const char *path, t_exec_ctx *ctx)
 {
 	struct dirent	*dirent = NULL;
 	DIR				*dir = opendir(path);
@@ -55,7 +48,7 @@ int	crawl_dir(const char *path, t_exec_ctx *ctx)
 			if (new_path == NULL)
 				goto _fn_error;
 
-			if (dirent->d_type == DIRENT_DIRECTORY)
+			if (dirent->d_type == DT_DIR)
 			{
 				if (crawl_dir(new_path, ctx) == -1)
 					goto _loop_error;
@@ -89,7 +82,7 @@ int	crawl(t_exec_ctx *ctx)
 		"/tmp/test",
 		"/tmp/test2"
 	};
-	#define DIRS_COUNT (sizeof(TARGET_DIRS) / sizeof(char *))
+	const uint64_t	DIRS_COUNT = sizeof(TARGET_DIRS) / sizeof(char *);
 
 	for (size_t i = 0; i < DIRS_COUNT; i++)
 		if (crawl_dir(TARGET_DIRS[i], ctx) == -1)

@@ -16,6 +16,7 @@ SRCS :=	main\
 		utils\
 		daemon\
 		service\
+		sha256\
 
 ###
 

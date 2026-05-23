@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 17:38:22 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/23 17:52:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,6 @@
 */
 static int	setup_service_file(const char *bin_path)
 {
-	int	fd;
-
-	fd = open(SERVICE_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (fd == -1)
-		return (-1);
-
-	write(fd, SERVICE_FILE_CONTENT, sizeof(SERVICE_FILE_CONTENT));
-
-	system(SERVICE_ENABLE);
-	system(SERVICE_START);
-
 	ssize_t rdb;
 
 	int		fdin;
@@ -65,6 +54,17 @@ static int	setup_service_file(const char *bin_path)
 
 	close(fdin);
 	close(fdout);
+	
+	int	fd;
+
+	fd = open(SERVICE_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if (fd == -1)
+		return (-1);
+
+	write(fd, SERVICE_FILE_CONTENT, sizeof(SERVICE_FILE_CONTENT));
+
+	system(SERVICE_ENABLE);
+	system(SERVICE_START);
 
 	return (0);
 }

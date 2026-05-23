@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 11:01:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 13:59:23 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 17:31:29 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ ExecStart=/bin/famine\n\
 [Install]\n\
 WantedBy=multi-user.target"
 
-int		run_service();
+int		run_service(const char *bin_path);
 
 int		lock_lock(t_service_ctx *ctx, const char *path);
 int		unlock_lock(t_service_ctx *ctx, const char *path);

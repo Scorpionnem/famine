@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:15:07 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 17:33:44 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/23 18:17:18 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # define COMMAND_HELP "All Commands:\n  \
 help: get all commands infos 🤯\n  \
 quit: close the virus 😱\n  \
+ls: like the ls command from bash 🌌\n  \
 cd [<arg>]: change your current directory 🌍\n  \
 getcwd: get your current working directory 🗺️\n  \
 encrypt <password> <file_path>: encrypt a file with the password 😂\n  \
@@ -47,6 +48,7 @@ decrypt <password> <file_path>: decrypt a file with the password 🤣\n"
 # define INVALID_COMMAND "Idk that command bro, try again 🤔\n"
 # define WRONG_DIR "Directory not found, try again 🍕\n"
 # define BAD_DIR "Bad writting command or directory, try again 🍔\n"
+# define BAD_LS "Failed to open dir \".\"??? wtf bro 💀\n"
 # define CHANGED_DIR "Moved to "
 # define GET_CWD "You are currently in "
 # define NO_CWD "WTF There is no CWD what are you doing 🥀\n"

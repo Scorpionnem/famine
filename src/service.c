@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 18:07:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 18:14:10 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,9 +266,8 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 		dir = opendir(".");
 		if (!dir)
 		{
-			server_send_to_id(&ctx->server, client->id, "failed to open dir \".\"??? wtf\n");
-			// cannot open
-			return (0);
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0) BAD_LS);
+			goto _prompt;
 		}
 
 		do
@@ -276,8 +275,9 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 			dirent = readdir(dir);
 			if (dirent)
 			{
+				server_send_to_id(&ctx->server, client->id, RGB(0,255,64));
 				server_send_to_id(&ctx->server, client->id, dirent->d_name);
-				server_send_to_id(&ctx->server, client->id, " ");
+				server_send_to_id(&ctx->server, client->id, CLR " ");
 			}
 		}
 		while (dirent);

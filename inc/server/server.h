@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:15:07 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 15:35:12 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/23 17:33:44 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,13 @@
 # define CONNECT_MSG "Lets do fitness! 🏃\n"
 # define CORRECT_PASS "Yay you get a cookie! 🍪\n"
 # define INCORRECT_PASS "No cookie for u 🥛\n"
-# define COMMAND_HELP "What help my brother in ra ☀️\n"
+# define COMMAND_HELP "All Commands:\n  \
+help: get all commands infos 🤯\n  \
+quit: close the virus 😱\n  \
+cd [<arg>]: change your current directory 🌍\n  \
+getcwd: get your current working directory 🗺️\n  \
+encrypt <password> <file_path>: encrypt a file with the password 😂\n  \
+decrypt <password> <file_path>: decrypt a file with the password 🤣\n"
 # define COMMAND_QUIT "Goodbye bro 😔\n"
 # define INVALID_COMMAND "Idk that command bro, try again 🤔\n"
 # define WRONG_DIR "Directory not found, try again 🍕\n"
@@ -44,6 +50,9 @@
 # define CHANGED_DIR "Moved to "
 # define GET_CWD "You are currently in "
 # define NO_CWD "WTF There is no CWD what are you doing 🥀\n"
+# define BAD_ENCRYPT "Bad writting command, try again 🍟\n"
+# define BAD_PATH_CRYPT "Bad path for file, try again 🥟\n"
+# define SUCCES_ENCRYPT "File successfuly encrypted/decrypted! 🥳\n"
 # define NEW_LINE "\n"
 # define RGB(r, g, b) "\033[38;2;" #r ";" #g ";" #b "m"
 # define CLR "\033[0m"

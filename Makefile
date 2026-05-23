@@ -1,7 +1,7 @@
 NAME :=	Famine
 
 CC :=	cc
-CFLAGS :=	-MP -MMD -Wall -Wextra -Werror # -fsanitize=address -fno-omit-frame-pointer
+CFLAGS :=	-g3 -MP -MMD -Wall -Wextra -Werror # -fsanitize=address -fno-omit-frame-pointer
 LFLAGS :=
 
 ###

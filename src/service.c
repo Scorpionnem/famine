@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 17:34:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 17:38:22 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -157,12 +159,6 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 
 	if (!check_client_password(ctx, client, msg))
 		return (1);
-
-	if (!strcmp(msg, "shell"))
-	{
-		// start_remote_shell(ctx, client);
-		return (1);
-	}
 	else if (!strncmp(msg, "cd", 1))
 	{
 		if (strlen(msg) == 3 || (msg[2] != ' ' && msg[2] != 0))
@@ -210,6 +206,41 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 		server_send_to_id(&ctx->server, client->id, RGB(255,128,0)COMMAND_QUIT CLR);
 		ctx->running = false;
 		return (1);
+	}
+	else if (!strncmp(msg, "encrypt", 6) || !strncmp(msg, "decrypt", 6))
+	{
+
+		if (strlen(msg) == 8 || (msg[7] != ' ' && msg[7] != 0))
+		{
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0)BAD_ENCRYPT CLR);
+			goto _prompt;
+		}
+		char *user_key = &msg[8];
+		int key_len = 0;
+		msg = msg + 8;
+		for (; *msg != ' ' && *msg != 0; key_len++)
+			msg++;
+		if (*msg == 0)
+		{
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0)BAD_ENCRYPT CLR);
+			goto _prompt;
+		}
+		msg = msg + 1;
+		uint8_t	key_hash[32];
+		sha256((uint8_t *)user_key, key_len, key_hash);
+
+		int file = open((const char *)msg, O_RDWR);
+		if (file == -1)
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0) BAD_PATH_CRYPT CLR);
+		struct stat	stats;
+		fstat(file, &stats);
+		size_t	size = stats.st_size;
+		void *adress = mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, file, 0);
+		uint8_t *bytes = adress;
+		for (size_t i = 0; i < size; ++i)
+			bytes[i] = bytes[i] ^ key_hash[i % 32];
+		munmap(ptr, size);
+		close(file);
 	}
 	else
 		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INVALID_COMMAND CLR);

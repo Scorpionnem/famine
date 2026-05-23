@@ -6,7 +6,9 @@ LFLAGS :=
 
 ###
 
-INCLUDE_DIRS :=	inc/\
+INCLUDE_DIRS :=	inc/		\
+				inc/server/	\
+				inc/list/	\
 
 SRCS :=	main\
 		infect\
@@ -17,6 +19,12 @@ SRCS :=	main\
 		daemon\
 		service\
 		sha256\
+		server/server\
+		server/server_clients\
+		server/server_update\
+		server/server_utils\
+		list/list_node\
+		list/list\
 
 ###
 

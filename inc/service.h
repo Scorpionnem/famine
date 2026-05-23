@@ -6,16 +6,21 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 11:01:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 11:16:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 13:59:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include "server.h"
+
 typedef struct s_service_ctx
 {
 	int		lock_fd;
 	bool	super_user;
+
+	t_server	server;
+	bool		running;
 }	t_service_ctx;
 
 #define SUPER_USER_LOCK_FILE "/var/lock/famine.lock"

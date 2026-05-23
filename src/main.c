@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 12:30:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/19 11:02:23 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:17:49 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "service.h"
 
 #include <unistd.h>
+
+void	sha256(uint8_t *msg, uint64_t len, uint8_t buf[32]);
 
 int	main(__attribute__((unused)) int ac, char **av, char **envp)
 {

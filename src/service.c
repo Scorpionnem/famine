@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 14:44:36 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/23 15:40:03 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,44 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 		// start_remote_shell(ctx, client);
 		return (1);
 	}
+	else if (!strncmp(msg, "cd", 1))
+	{
+		if (strlen(msg) == 3 || (msg[2] != ' ' && msg[2] != 0))
+		{
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0)BAD_DIR CLR);
+			goto _prompt;
+		}
+		else if (strlen(msg) == 2)
+		{
+			if (chdir("/") == -1)
+				server_send_to_id(&ctx->server, client->id, RGB(255,0,0)WRONG_DIR CLR);
+			else
+				server_send_to_id(&ctx->server, client->id, RGB(0,255,64)CHANGED_DIR"/"NEW_LINE CLR);
+			goto _prompt;
+		}
+		char *arg = &msg[3];
+		if (chdir(arg) == -1)
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0)WRONG_DIR CLR);
+		else
+		{
+			server_send_to_id(&ctx->server, client->id, RGB(0,255,64)CHANGED_DIR);
+			server_send_to_id(&ctx->server, client->id, arg);
+			server_send_to_id(&ctx->server, client->id, NEW_LINE CLR);
+		}
+	}
+	else if (!strcmp(msg, "getcwd"))
+	{
+		char *path = getcwd(NULL, 0);
+		if (!path)
+		{
+			server_send_to_id(&ctx->server, client->id, RGB(255,0,0)NO_CWD CLR);
+			goto _prompt;
+		}
+		server_send_to_id(&ctx->server, client->id, RGB(0, 255, 64)GET_CWD);
+		server_send_to_id(&ctx->server, client->id, path);
+		server_send_to_id(&ctx->server, client->id, NEW_LINE CLR);
+		free(path);
+	}
 	else if (!strcmp(msg, "help"))
 	{
 		server_send_to_id(&ctx->server, client->id, RGB(0,128,255)COMMAND_HELP CLR);
@@ -147,6 +185,7 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 	}
 	else
 		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INVALID_COMMAND CLR);
+_prompt:
 	server_send_to_fd(client->fd, PROMPT);
 	return (1);
 }

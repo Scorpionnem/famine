@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   daemon.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 14:44:45 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 14:19:17 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:46:47 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	daemonize()
 	if (pid != 0)
 		return (I_AM_MAIN_PROCESS);
 
-	// if (chdir("/") == -1)
-	// 	return (I_AM_A_MISTAKE);
+	if (chdir("/") == -1)
+		return (I_AM_A_MISTAKE);
 	return (I_AM_CHILD_PROCESS);
 }

@@ -2,7 +2,7 @@
 
 > **⚠️ Educational purposes only. Do not deploy on systems you do not own or have explicit permission to test.**
 
-A Linux ELF virus written in C as part of the **42 Post-CC** curriculum. Famine infects ELF binaries, persists as a disguised systemd service, and exposes a password-protected remote C2 shell over TCP.
+A Linux ELF virus written in C as part of the **42 Post-CC** curriculum. Famine spreads by appending itself to ELF binaries, persists as a disguised systemd service, and exposes a password-protected remote C2 shell over TCP.
 
 Made by **[mbatty](https://github.com/scorpionnem)** & **[pboucher](https://github.com/pgbmax)**.
 
@@ -11,35 +11,70 @@ Made by **[mbatty](https://github.com/scorpionnem)** & **[pboucher](https://gith
 ## Table of Contents
 
 - [How It Works](#how-it-works)
+- [Infection Format](#infection-format)
 - [Features](#features)
 - [Architecture](#architecture)
-- [C2 Shell Commands](#c2-shell-commands)
+- [C2 Shell](#c2-shell)
 - [Build](#build)
-- [Usage](#usage)
 
 ---
 
 ## How It Works
 
-When an infected binary is executed, Famine:
-
-1. **Forks** — the parent extracts and executes any embedded payload (the original host binary), so execution looks normal to the user.
-2. **Daemonizes** — the child detaches from the terminal and runs silently in the background.
-3. **Crawls** the filesystem recursively, appending itself to every valid ELF binary it can reach, while skipping already-infected files (signature check).
-4. **Persists** by installing itself as a systemd service disguised as `"Fitness app to track eating habits"` (yes, really).
-5. **Listens** on a TCP port for remote C2 connections.
+When an infected binary is executed, three things happen concurrently:
 
 ```
-Infected binary executed
+Infected binary runs
         │
-        ├──► [Parent] Extract & exec original payload → normal program runs
+        ├──► [Parent fork]
+        │       └─ Extracts embedded payload from footer → writes to memfd → execve()
+        │          (the original binary runs transparently in RAM, nothing touches disk)
         │
-        └──► [Child] Daemonize
+        └──► [Child fork] mute stdout/stderr → setsid() → fork() again
                   │
-                  ├──► [Main process] Crawl & infect ELF binaries
+                  ├──► [Main process] crawl /tmp/test, /tmp/test2 → infect ELF files
                   │
-                  └──► [Service]  C2 TCP server
+                  └──► [Service process]
+                            ├─ Acquire lock file (prevent duplicate instances)
+                            ├─ If root: copy self to /bin/famine + install systemd service
+                            └─ Open C2 TCP server on port 6942
 ```
+
+### Step by step
+
+1. **Transparent execution** — the parent forks, reads the original binary out of the footer, drops it into an anonymous `memfd` (never touches disk), then `execve`s it with the original `argv`/`envp`. From the user's perspective the program just runs normally.
+
+2. **Daemonize** — the child calls `setsid()` to detach from the controlling terminal, then forks again. stdout and stderr are silenced by redirecting to `/dev/null` first.
+
+3. **Crawl & infect** — the main daemon process walks `/tmp/test` and `/tmp/test2` recursively. For each file it:
+   - Checks the ELF magic bytes and validates the header (supports x86 and x86_64, all endiannesses, `ET_REL`/`ET_EXEC`/`ET_DYN`)
+   - Checks whether a Famine footer is already present — if so, skips the file
+   - Packs `[virus bytes][original file bytes][footer]` into a `.tmp` file then renames it over the target
+
+4. **Persistence** — if running as root, the service process copies the binary to `/bin/famine` and writes `/etc/systemd/system/famine.service` (disguised as *"Fitness app to track eating habits"*), then enables and starts it. The service is configured with `Restart=always`, so it survives reboots and kills.
+
+5. **C2 server** — a `poll(2)`-based multi-client TCP server starts on port **6942**. Incoming clients must authenticate with a password before issuing commands.
+
+---
+
+## Infection Format
+
+The packed binary layout on disk looks like this:
+
+```
+┌─────────────────────┬──────────────────────┬──────────────────────────────┐
+│   Virus binary      │   Original binary    │          Footer              │
+│   (self)            │   (payload)          │  magic | signature | size    │
+└─────────────────────┴──────────────────────┴──────────────────────────────┘
+                                              ↑
+                             0x4242424242424242  ← magic sentinel
+```
+
+- **Magic**: `0x4242424242424242` — used to detect already-infected files and to locate the footer at runtime
+- **Signature**: `"Famine version 1.0 (c)oded by mbatty-pboucher"` — human-readable marker
+- **Payload size**: size in bytes of the embedded original binary
+
+At runtime, `extract_payload()` seeks to `-(sizeof(footer) + payload_size)` from the end of the file to read back the original binary.
 
 ---
 
@@ -47,15 +82,15 @@ Infected binary executed
 
 | Feature | Details |
 |---|---|
-| **ELF infection** | Appends the virus + original binary as a footer payload; detects & skips already-infected files |
-| **Signature check** | Magic number `0x4242424242424242` + human-readable signature string prevent double-infection |
-| **Anti-duplicate** | Lock file (`/var/lock/famine.lock` or `/tmp/famine.lock`) prevents multiple instances |
-| **Persistence** | Installs `/bin/famine` and registers a systemd service with `Restart=always` |
-| **C2 server** | Multi-client TCP server (up to 3 simultaneous connections) using `poll(2)` |
-| **SHA-256 auth** | Connection password is hashed with a hand-rolled SHA-256 implementation |
-| **File encryption** | XOR-based encrypt/decrypt over arbitrary files, keyed by a user-supplied password |
-| **Remote shell** | Spawns a `/bin/sh` child on the target and bridges its I/O to the connected client |
-| **Privilege-aware** | Runs on port **4242** as root, **6967** as a regular user |
+| **Append-based infection** | Packs virus + original binary together; no ELF section patching |
+| **Double-infection guard** | Footer magic check skips already-infected files |
+| **In-memory execution** | Original binary runs via `memfd_create` + `execve(/proc/self/fd/N)` — never written to disk |
+| **Anti-duplicate** | `flock(LOCK_EX\|LOCK_NB)` on a lock file prevents multiple service instances |
+| **Persistence** | Copies to `/bin/famine` + systemd unit with `Restart=always` (root only) |
+| **C2 server** | `poll(2)` TCP server, up to 3 simultaneous clients, port **6942** |
+| **SHA-256 auth** | Password verified against a hardcoded SHA-256 hash (hand-rolled implementation) |
+| **File encryption** | XOR each byte with `SHA-256(password)[i % 32]` — same operation encrypts and decrypts |
+| **ELF validation** | Validates magic, version, class (ELF32/ELF64), machine (x86/x86_64), and type |
 
 ---
 
@@ -63,82 +98,72 @@ Infected binary executed
 
 ```
 src/
-├── main.c          — Entry point: fork, daemonize, dispatch
-├── daemon.c        — Double-fork daemonize logic
-├── crawl.c         — Recursive directory crawler
-├── infect.c        — ELF infection (append virus + pack payload)
-├── check.c         — Signature & ELF header validation
-├── payload.c       — Payload extraction & exec
-├── service.c       — Lock file, systemd service install, C2 bootstrap
-├── sha256.c        — SHA-256 implementation (used for auth)
-├── utils.c         — strjoin and misc helpers
+├── main.c               Entry point: fork parent/child, dispatch crawl vs service
+├── daemon.c             setsid + fork daemonize, lock file helpers, mute outputs
+├── crawl.c              Recursive directory walker (targets /tmp/test, /tmp/test2)
+├── infect.c             Per-file infection: ELF check → signature check → pack
+├── check.c              ELF header validation + footer signature check
+├── payload.c            pack_payload(), extract_payload(), exec_payload() via memfd
+├── service.c            Lock, systemd install, C2 server bootstrap, command handler
+├── sha256.c             Hand-rolled SHA-256 (auth + encryption key derivation)
+├── utils.c              strjoin
 ├── server/
-│   ├── server.c         — Socket init, poll loop
-│   ├── server_clients.c — Client accept / disconnect
-│   ├── server_update.c  — Command dispatch per client
-│   └── server_utils.c   — Send helpers, prompt
+│   ├── server.c         Socket open/close, send helpers, hook registration
+│   ├── server_clients.c Client accept, disconnect, list management
+│   ├── server_update.c  poll() loop, line-based and raw (file transfer) read modes
+│   └── server_utils.c   Internal string helpers
 └── list/
-    ├── list.c       — Generic doubly-linked list
-    └── list_node.c  — Node alloc / free
+    ├── list.c           Generic doubly-linked list
+    └── list_node.c      Node alloc / free
 ```
 
 ---
 
-## C2 Shell Commands
+## C2 Shell
 
-Connect with `nc <target> 4242` (root) or `nc <target> 6967` (user), then enter the password.
+Connect from anywhere with:
+
+```bash
+nc <target_ip> 6942
+```
+
+On connect the server sends a greeting and a password prompt. The password is verified by comparing `SHA-256(input)` against a hardcoded hash.
 
 ```
-$Famine 🍖> help
+Lets do fitness! 🏃
+Password 🐈: <your password>
+Yay you get a cookie! 🍪
+$Famine 🍖>
 ```
+
+### Available commands
 
 | Command | Description |
 |---|---|
-| `help` | List all available commands |
-| `getcwd` | Print the current working directory of the service |
+| `help` | Print all available commands |
+| `getcwd` | Print the service's current working directory |
 | `cd <path>` | Change the service's working directory |
-| `encrypt <password> <file>` | XOR-encrypt a file in-place |
-| `decrypt <password> <file>` | XOR-decrypt a file in-place |
-| `quit` | Gracefully close the virus |
+| `encrypt <password> <file>` | XOR-encrypt a file in-place (key = SHA-256 of password) |
+| `decrypt <password> <file>` | XOR-decrypt a file in-place (same operation, symmetric) |
+| `quit` | Stop the C2 server |
+
+> The server also supports a raw `transfer:<size>` mode for receiving binary files from the client.
 
 ---
 
 ## Build
 
 ```bash
-# Build
-make
-
-# Rebuild from scratch
-make re
-
-# Clean objects
-make clean
-
-# Clean everything
-make fclean
+make          # build
+make re       # clean rebuild
+make clean    # remove objects
+make fclean   # remove objects + binary
 ```
 
-> Requires `gcc` / `cc` and standard POSIX headers. No external dependencies.
-
----
-
-## Usage
-
-```bash
-# Pack a payload (embed target_binary inside virus)
-./Famine --pack <target_binary> <output>
-
-# Run an infected binary — it behaves normally while Famine runs in the background
-./<infected_binary>
-
-# Connect to the C2 shell (from another machine or localhost)
-nc <target_ip> 4242
-```
+Requires `cc` and standard POSIX/Linux headers. No external libraries.
 
 ---
 
 ## Disclaimer
 
 This project was developed strictly within the **42 school** educational framework to study low-level binary formats, process management, and network programming. The authors take no responsibility for any misuse. Running this software against systems without explicit authorization is **illegal**.
-

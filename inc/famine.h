@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   famine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:36 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/19 11:09:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:41:50 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct	s_exec_ctx
 	char	**envp;
 }	t_exec_ctx;
 
-#define SIGNATURE_STR "\0" "Famine version 1.0 (c)oded by mbatty-mbatty"
+#define SIGNATURE_STR "\0" "Famine version 1.0 (c)oded by mbatty-pboucher"
 
 typedef struct s_footer
 {

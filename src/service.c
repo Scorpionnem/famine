@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 14:22:38 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:44:36 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,12 @@ static int	check_client_password(t_service_ctx *ctx, t_client *client, char *msg
 		sha256((uint8_t*)msg, strlen(msg), hash);
 		if (!memcmp(hash, hashed_pass, sizeof(hashed_pass)))
 		{
-			server_send_to_id(&ctx->server, client->id, "yay you get a cookie!");
+			server_send_to_id(&ctx->server, client->id, RGB(0,255,0)CORRECT_PASS CLR);
 			server_send_to_fd(client->fd, PROMPT);
 			client->logged = true;
 			return (0);
 		}
-		server_send_to_id(&ctx->server, client->id, "no cookie for u");
+		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INCORRECT_PASS CLR PASSWORD);
 		return (0);
 	}
 	return (1);
@@ -137,15 +137,16 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 	}
 	else if (!strcmp(msg, "help"))
 	{
-		server_send_to_id(&ctx->server, client->id, "what help");
+		server_send_to_id(&ctx->server, client->id, RGB(0,128,255)COMMAND_HELP CLR);
 	}
 	else if (!strcmp(msg, "quit"))
 	{
+		server_send_to_id(&ctx->server, client->id, RGB(255,128,0)COMMAND_QUIT CLR);
 		ctx->running = false;
 		return (1);
 	}
 	else
-		server_send_to_id(&ctx->server, client->id, "idk that command bro");
+		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INVALID_COMMAND CLR);
 	server_send_to_fd(client->fd, PROMPT);
 	return (1);
 }
@@ -154,7 +155,7 @@ void	connect_hook(t_client *client, void *ptr)
 {
 	t_service_ctx	*ctx = ptr;
 
-	server_send_to_id(&ctx->server, client->id, "lets do fitness!");
+	server_send_to_id(&ctx->server, client->id, RGB(128,0,128)CONNECT_MSG CLR PASSWORD);
 }
 
 void	disconnect_hook(t_client *client, void *ptr)

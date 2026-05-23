@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:15:07 by mbatty            #+#    #+#             */
-/*   Updated: 2025/12/07 12:43:23 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/23 15:35:12 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,22 @@
 
 # include "list.h"
 
-# define PROMPT "$> "
+# define PROMPT "$Famine 🍖> "
+# define PASSWORD "Password 🐈: "
+# define CONNECT_MSG "Lets do fitness! 🏃\n"
+# define CORRECT_PASS "Yay you get a cookie! 🍪\n"
+# define INCORRECT_PASS "No cookie for u 🥛\n"
+# define COMMAND_HELP "What help my brother in ra ☀️\n"
+# define COMMAND_QUIT "Goodbye bro 😔\n"
+# define INVALID_COMMAND "Idk that command bro, try again 🤔\n"
+# define WRONG_DIR "Directory not found, try again 🍕\n"
+# define BAD_DIR "Bad writting command or directory, try again 🍔\n"
+# define CHANGED_DIR "Moved to "
+# define GET_CWD "You are currently in "
+# define NO_CWD "WTF There is no CWD what are you doing 🥀\n"
+# define NEW_LINE "\n"
+# define RGB(r, g, b) "\033[38;2;" #r ";" #g ";" #b "m"
+# define CLR "\033[0m"
 
 typedef struct s_client
 {

@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/24 14:55:14 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/24 15:04:52 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,10 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 
 		int file = open((const char *)msg, O_RDWR);
 		if (file == -1)
+		{
 			server_send_to_id(&ctx->server, client->id, RGB(255,0,0) BAD_PATH_CRYPT CLR);
+			goto _prompt;
+		}
 		struct stat	stats;
 		fstat(file, &stats);
 		size_t	size = stats.st_size;

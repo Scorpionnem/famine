@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 17:53:33 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 23:53:55 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/24 14:55:19 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 	@param path path to targeted directory
 	@param ctx context used mainly for argv/envp
 */
-int	crawl_dir(const char *path, t_exec_ctx *ctx)
+static int	crawl_dir(const char *path, t_exec_ctx *ctx)
 {
 	struct dirent	*dirent = NULL;
 	DIR				*dir = opendir(path);

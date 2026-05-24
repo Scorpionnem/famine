@@ -6,7 +6,7 @@
 /*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:15:07 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 23:59:36 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/24 14:54:43 by pboucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ ls: like the ls command from bash 🌌\n  \
 cd [<arg>]: change your current directory 🌍\n  \
 getcwd: get your current working directory 🗺️\n  \
 encrypt <password> <file_path>: encrypt a file with the password 😂\n  \
-decrypt <password> <file_path>: decrypt a file with the password 🤣\n  \
-order66: Infect the whole pc with signature 😇\n"
+decrypt <password> <file_path>: decrypt a file with the password 🤣\n"
 # define COMMAND_QUIT "Goodbye bro 😔\n"
 # define INVALID_COMMAND "Idk that command bro, try again 🤔\n"
 # define WRONG_DIR "Directory not found, try again 🍕\n"

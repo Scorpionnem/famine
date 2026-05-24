@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   service.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboucher <pboucher@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 15:18:30 by mbatty            #+#    #+#             */
-/*   Updated: 2026/05/23 23:56:23 by pboucher         ###   ########.fr       */
+/*   Updated: 2026/05/24 09:48:55 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,10 @@ int	message_hook(t_client *client, char *msg, int64_t size, void *ptr)
 			dirent = readdir(dir);
 			if (dirent)
 			{
-				server_send_to_id(&ctx->server, client->id, RGB(0,255,64));
+				if (dirent->d_type == DT_DIR)
+					server_send_to_id(&ctx->server, client->id, RGB(0,64,255));
+				else
+					server_send_to_id(&ctx->server, client->id, RGB(0,255,64));
 				server_send_to_id(&ctx->server, client->id, dirent->d_name);
 				server_send_to_id(&ctx->server, client->id, CLR " ");
 			}

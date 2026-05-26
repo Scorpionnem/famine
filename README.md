@@ -1,4 +1,24 @@
-# 🦠 Famine
+<div align="center">
+  <h1>🦠 Famine</h1>
+  <p>A Linux ELF virus — 42 Post-CC</p>
+</div>
+
+<div align="center">
+  <img width="320" alt="Famine project score" src="https://github.com/user-attachments/assets/cb338c1d-c9f2-48b7-9a58-51001d1f1ad0" />
+</div>
+
+<br/>
+
+<div align="center">
+
+![Static Badge](https://img.shields.io/badge/os-linux-orange)
+![Static Badge](https://img.shields.io/badge/language-C99-blue)
+![Static Badge](https://img.shields.io/badge/C2%20port-6942-red)
+![Static Badge](https://img.shields.io/badge/auth-SHA--256-purple)
+
+</div>
+
+---
 
 > **⚠️ Educational purposes only. Do not deploy on systems you do not own or have explicit permission to test.**
 
